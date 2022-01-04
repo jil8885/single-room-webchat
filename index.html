@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Single Room Web Chat</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.4.0/socket.io.min.js" integrity="sha512-I9p4eOeWXGM9m5GhJYd3UDUA5Lr+Epp5e4ykWFYW9hv3jZqdR92S5p+ApMSWuMaV4E+JqILepP1G9kNer4AFGQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link rel="stylesheet" type="text/css" href="/static/index.css">
+</head>
+<body>
+    <script type="text/javascript" charset="utf-8">
+        const socket = io("http://localhost:8080/talk");
+        socket.on("connect", ()=>{
+            console.log("connect to server!")
+        })
+
+        socket.on("disconnect", ()=>{
+            console.log("disconnect from server")
+        })
+
+        socket.on("received_message", (data) => {
+            let paragraph = document.createElement("p");
+            let span = document.createElement("span");
+            console.log(data["data"])
+            span.innerHTML = data["data"]["nickname"];
+            paragraph.appendChild(span);
+            paragraph.innerHTML = paragraph.innerHTML + " - " + data["data"]["message"];
+
+            if(document.getElementById("message-section").children.length >= 20){
+                document.getElementById("message-section").removeChild(document.getElementById('message-section').children[0]);
+            }
+            document.getElementById("message-section").appendChild(paragraph);
+            document.getElementById("message-section").scroll(0, document.getElementById("message-section").scrollHeight)
+        })
+
+        function sendMessage(){
+            socket.emit("send_message", {"nickname": document.getElementById("nickname-text-input").value, "message": document.getElementById("message-text-input").value})
+            document.getElementById("message-text-input").value = ""
+        }
+
+        function whenPressEnter(e){
+            if(e.keyCode === 13 || e.which === 13){
+                sendMessage()
+            }
+        }
+
+
+
+    </script>
+    <h1 id="title">Single Room Chat</h1>
+    <section id="chat-section">
+        <section id="message-section"></section>
+        <section id="input-section">
+            <input type="text" id="message-text-input" autofocus required onkeypress="return whenPressEnter(event)">
+            <button type="button" id="message-send-button" onclick="sendMessage()">전송</button>
+        </section>
+    </section>
+
+    <section id="nickname-section">
+        <label for="nickname-text-input" id="nickname-label">닉네임: </label>
+        <input type="text" id="nickname-text-input" autocomplete="off" value="익명">
+    </section>
+</body>
+</html>
