@@ -1,3 +1,6 @@
 aiohttp
 aiohttp_cors
+aioredis
 python-socketio
+pyjwt
+bcrypt

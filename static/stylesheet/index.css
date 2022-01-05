@@ -69,10 +69,10 @@ body{
     font-size: calc(10px + 1vh);
     font-weight: 900;
 }
-#nickname-section{
+#nickname-section #user-id-section #password-section{
     padding: 15px;
 }
-#nickname-text-input {
+#nickname-text-input #user-id-text-input #password-text-input{
     border-radius: 5px;
     background: #0E4A84;
     color: white;
@@ -80,6 +80,10 @@ body{
     text-align: center;
     font-size: calc(10px + 1vh + 1vw);
 }
-#nickname-label{
+#nickname-label #user-id-label #password-label{
     font-size: calc(10px + 1vh + 1vw);
+}
+
+#login-button{
+    margin: 10px;
 }

@@ -1,0 +1,15 @@
+version: "3.8"
+
+services:
+  redis:
+    image: "redis:latest"
+    container_name: "redis"
+    ports:
+      - "6379:6379"
+  async_app_server:
+    build: "."
+    container_name: "async_app_server"
+    ports:
+      - "8080:8080"
+    links:
+      - "redis"

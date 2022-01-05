@@ -4,11 +4,29 @@
     <meta charset="UTF-8">
     <title>Single Room Web Chat</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.4.0/socket.io.min.js" integrity="sha512-I9p4eOeWXGM9m5GhJYd3UDUA5Lr+Epp5e4ykWFYW9hv3jZqdR92S5p+ApMSWuMaV4E+JqILepP1G9kNer4AFGQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <link rel="stylesheet" type="text/css" href="/static/index.css">
+    <link rel="stylesheet" type="text/css" href="/static/stylesheet/index.css">
 </head>
 <body>
     <script type="text/javascript" charset="utf-8">
-        const socket = io("http://localhost:8080/talk");
+        const access_token = localStorage.getItem("access_token");
+        const refresh_token = localStorage.getItem("refresh_token");
+        if(access_token != null && refresh_token != null){
+            fetch("/user", {
+                method: "GET",
+                headers: {
+                    "Authorization": "Basic " + access_token
+                }})
+            .then(result => {
+                if(result.status !== 200) {
+                    alert("Move to login page.")
+                    window.location.href = "/login_page"
+                }
+            })
+        } else {
+            alert("Move to login page.")
+            window.location.href = "/login_page"
+        }
+        const socket = io("/talk");
         socket.on("connect", ()=>{
             console.log("connect to server!")
         })
@@ -42,9 +60,6 @@
                 sendMessage()
             }
         }
-
-
-
     </script>
     <h1 id="title">Single Room Chat</h1>
     <section id="chat-section">

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Single Room Web Chat</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.4.0/socket.io.min.js" integrity="sha512-I9p4eOeWXGM9m5GhJYd3UDUA5Lr+Epp5e4ykWFYW9hv3jZqdR92S5p+ApMSWuMaV4E+JqILepP1G9kNer4AFGQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link rel="stylesheet" type="text/css" href="/static/stylesheet/index.css">
+</head>
+<body>
+    <script type="text/javascript" charset="utf-8">
+        function login() {
+            fetch("/login", {
+                method: "POST",
+                body: JSON.stringify({
+                    user_id: document.getElementById("user-id-text-input").value,
+                    user_password: document.getElementById("password-text-input").value
+                })
+            })
+          .then((response) => response.json())
+            .then((requestResult) => {
+                    console.log(requestResult)
+                    if (requestResult.hasOwnProperty("access_token") && requestResult.hasOwnProperty("refresh_token")) {
+                        localStorage.setItem("access_token", requestResult["access_token"])
+                        localStorage.setItem("refresh_token", requestResult["refresh_token"])
+                        alert("Log in successfully")
+                        window.location.href = "/"
+                    } else{
+                        alert("Failed to log in")
+                    }
+            })
+        }
+
+        function signUP() {
+            fetch("/signup", {
+                method: "POST",
+                body: JSON.stringify({
+                    user_id: document.getElementById("user-id-text-input").value,
+                    user_password: document.getElementById("password-text-input").value
+                })
+            })
+            .then((response) => response.json())
+            .then((requestResult) => {
+                    console.log(requestResult)
+                    if (requestResult.hasOwnProperty("access_token") && requestResult.hasOwnProperty("refresh_token")) {
+                        let requestResult = JSON.parse(result.text())
+                        if (requestResult.get("user_id") != null) {
+                            alert(requestResult.get("user_id") + " Sign successfully")
+                            window.location.href = "/"
+                        }
+                    } else{
+                        alert("Failed to log in")
+                    }
+            })
+        }
+    </script>
+    <h1 id="title">Single Room Chat(Login)</h1>
+    <section id="user-id-section">
+        <label for="user-id-text-input" id="user-id-label">ID: </label>
+        <input type="text" id="user-id-text-input" autocomplete="off" value="">
+    </section>
+    <section id="password-section">
+        <label for="password-text-input" id="password-label">PW: </label>
+        <input type="password" id="password-text-input" autocomplete="off" value="">
+    </section>
+    <button type="button" id="login-button" onclick="login()">Log in</button>
+    <button type="button" id="signup-button" onclick="signUP()">Sign up</button>
+
+</body>
+</html>
